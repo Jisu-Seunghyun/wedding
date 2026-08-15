@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Meta / OG tags - config.js 값으로 script에서 동적 설정 -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jisu-seunghyun.github.io/test/">
+  <meta property="og:title" content="황승현 ♥ 이지수 결혼합니다">
+  <meta property="og:description" content="2026년 10월 3일 토요일 오후 6시 30분, 아펠가모 반포">
+  <meta property="og:image" content="https://jisu-seunghyun.github.io/test/images/og/1.jpg">
+  <meta name="description" content="">
+
+  <title>황승현 ♥ 이지수 결혼합니다</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+</head>
+<body>
+
+  <!-- ─── Background Music ─── -->
+  <audio id="bgmAudio" src="music/bgm.mp3" loop preload="none"></audio>
+  <button class="bgm-toggle" id="bgmToggle" type="button" aria-label="배경음악 재생" aria-pressed="false">
+    ♪
+  </button>
+
+  <!-- ─── Curtain (Simple Overlay) ─── -->
+  <div id="curtain" class="curtain">
+    <div class="curtain__content">
+      <p class="curtain__names" id="curtainNames"></p>
+      <button class="curtain__btn" id="curtainBtn">열기</button>
+    </div>
+  </div>
+
+  <!-- ─── Toast Notification ─── -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- ─── Photo Viewer Modal ─── -->
+  <div id="photoModal" class="photo-modal" role="dialog" aria-modal="true" aria-label="사진 보기">
+    <button class="photo-modal__close" id="modalClose" aria-label="닫기">&times;</button>
+    <button class="photo-modal__nav photo-modal__nav--prev" id="modalPrev" aria-label="이전 사진">&#8249;</button>
+    <button class="photo-modal__nav photo-modal__nav--next" id="modalNext" aria-label="다음 사진">&#8250;</button>
+    <div class="photo-modal__container" id="modalContainer">
+      <img class="photo-modal__img" id="modalImg" src="" alt="사진" draggable="false">
+    </div>
+    <div class="photo-modal__counter" id="modalCounter"></div>
+  </div>
+
+  <!-- Main Content -->
+  <main id="mainContent" class="main-content">
+    <!-- Page 1: Cover -->
+    <section class="page page--dark hero" id="hero">
+      <div class="page__inner hero__inner">
+        <header class="hero__heading animate-item" data-animate="fade-up">
+          <p class="hero__eyebrow">Save the Date</p>
+          <p class="hero__english-names" id="heroEnglishNames">Hwang Seung Hyun · Lee Ji Su</p>
+        </header>
+        <figure class="hero__photo-frame animate-item" data-animate="fade-in">
+          <img class="hero__photo" id="heroPhoto" src="" alt="신랑 신부 웨딩 사진" loading="eager">
+        </figure>
+        <div class="hero__content animate-item" data-animate="fade-up">
+          <h1 class="hero__names" id="heroNames"></h1>
+          <p class="hero__date" id="heroDate"></p>
+          <p class="hero__venue" id="heroVenue"></p>
+        </div>
+        <div class="countdown" id="countdown" aria-hidden="true">
+          <p id="countdownLabel"></p>
+          <span id="countDays">0</span><span id="countHours">0</span>
+          <span id="countMinutes">0</span><span id="countSeconds">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page 2: Invitation -->
+    <section class="page page--dark greeting" id="greeting">
+      <div class="page__inner greeting__inner">
+        <div class="greeting__image-slot animate-item" data-animate="fade-in">
+          <img class="greeting__image" id="greetingTextImage" alt="초대 문구" decoding="async">
+        </div>
+        <div class="greeting__parents animate-item" data-animate="fade-up" id="greetingParents"></div>
+      </div>
+    </section>
+
+    <!-- Page 3: Story I -->
+    <section class="page page--pink story-page story-page--one" id="story">
+      <div class="page__inner story-page__inner">
+        <div class="story-composition animate-item" data-animate="fade-up">
+          <button class="story-photo story-photo--one" id="storyPhotoOne" type="button" aria-label="첫 번째 스토리 사진 크게 보기"></button>
+          <article class="story-card story-card--one">
+            <p class="page-kicker">Our Story</p>
+            <h2 class="section__title" id="storyTitle"></h2>
+            <p class="story__text" id="storyContent"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page 4: Story II -->
+    <section class="page page--pink story-page story-page--two" id="storySecondPage">
+      <div class="page__inner story-page__inner">
+        <div class="story-composition animate-item" data-animate="fade-up">
+          <button class="story-photo story-photo--two" id="storyPhotoTwo" type="button" aria-label="두 번째 스토리 사진 크게 보기"></button>
+          <article class="story-card story-card--two">
+            <p class="page-kicker">The Wedding Day</p>
+            <p class="story-card__date" id="storyDate"></p>
+            <p class="story-card__venue" id="storyVenue"></p>
+            <p class="story-card__address" id="storyAddress"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page 5: Gallery -->
+    <section class="page page--dark gallery" id="gallery">
+      <div class="page__inner gallery__inner">
+        <header class="gallery__heading animate-item" data-animate="fade-up">
+          <p class="page-kicker">Moments</p>
+          <h2 class="section__title">Gallery</h2>
+        </header>
+        <div class="gallery__grid" id="galleryGrid"></div>
+      </div>
+    </section>
+
+    <!-- Page 6: Location -->
+    <section class="page page--dark location" id="location">
+      <div class="page__inner location__inner">
+        <header class="location__heading animate-item" data-animate="fade-up">
+          <p class="page-kicker">Location</p>
+          <h2 class="section__title">오시는 길</h2>
+        </header>
+        <div class="location__info animate-item" data-animate="fade-up">
+          <p class="location__venue" id="locationVenue"></p>
+          <p class="location__hall" id="locationHall"></p>
+          <p class="location__address" id="locationAddress"></p>
+          <p class="location__tel" id="locationTel"></p>
+          <button class="btn btn--text location__copy" id="copyAddressBtn">주소 복사</button>
+        </div>
+        <div class="location__map animate-item" data-animate="fade-in">
+          <img class="location__map-img" id="locationMapImg" src="" alt="약도" loading="lazy">
+        </div>
+        <div class="location__links animate-item" data-animate="fade-up">
+          <a class="btn btn--outline" id="kakaoMapBtn" href="#" target="_blank" rel="noopener">카카오맵</a>
+          <a class="btn btn--outline" id="naverMapBtn" href="#" target="_blank" rel="noopener">네이버지도</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calendar Actions -->
+    <section class="page page--pink calendar-section" id="calendarSection">
+      <div class="page__inner utility-page__inner">
+        <p class="page-kicker animate-item" data-animate="fade-up">Calendar</p>
+        <h2 class="section__title animate-item" data-animate="fade-up">예식 일시</h2>
+        <div class="calendar animate-item" data-animate="fade-up" id="calendarGrid"></div>
+        <div class="calendar-actions animate-item" data-animate="fade-up">
+          <a class="btn btn--outline" id="googleCalBtn" href="#" target="_blank" rel="noopener">Google 캘린더</a>
+          <button class="btn btn--outline" id="icsDownloadBtn">Apple 캘린더</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Account Section (축의금) -->
+    <section class="page page--pink account" id="account">
+      <div class="page__inner utility-page__inner">
+        <p class="page-kicker animate-item" data-animate="fade-up">For Your Heart</p>
+        <h2 class="section__title animate-item" data-animate="fade-up">마음 전하실 곳</h2>
+        <p class="account__desc animate-item" data-animate="fade-up">축하의 마음을 담아 축의금을 전달해 보세요.</p>
+
+        <!-- Groom Accounts -->
+        <div class="accordion animate-item" data-animate="fade-up">
+          <button class="accordion__trigger" id="groomAccordion" aria-expanded="false">
+            <span>신랑측 계좌번호</span>
+            <span class="accordion__arrow" aria-hidden="true">▽</span>
+          </button>
+          <div class="accordion__panel" id="groomAccordionPanel">
+            <div class="accordion__panel-inner" id="groomAccountList"></div>
+          </div>
+        </div>
+
+        <!-- Bride Accounts -->
+        <div class="accordion animate-item" data-animate="fade-up">
+          <button class="accordion__trigger" id="brideAccordion" aria-expanded="false">
+            <span>신부측 계좌번호</span>
+            <span class="accordion__arrow" aria-hidden="true">▽</span>
+          </button>
+          <div class="accordion__panel" id="brideAccordionPanel">
+            <div class="accordion__panel-inner" id="brideAccountList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer__text" id="footerText"></p>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
