@@ -183,7 +183,15 @@
   function initHero() {
     $('#heroPhoto').src = 'images/hero/1.jpg';
     $('#heroEnglishNames').textContent = `${CONFIG.groom.englishName || CONFIG.groom.name} · ${CONFIG.bride.englishName || CONFIG.bride.name}`;
-    $('#heroNames').textContent = `${CONFIG.groom.name}  ·  ${CONFIG.bride.name}`;
+    const heroNames = $('#heroNames');
+    const heroHeart = document.createElement('span');
+    heroHeart.className = 'hero__heart';
+    heroHeart.textContent = '♥';
+    heroNames.replaceChildren(
+      document.createTextNode(`${CONFIG.groom.name} `),
+      heroHeart,
+      document.createTextNode(` ${CONFIG.bride.name}`)
+    );
     $('#heroDate').textContent = formatCoverDate(CONFIG.wedding.date, CONFIG.wedding.time);
     $('#heroVenue').textContent = CONFIG.wedding.venue;
   }

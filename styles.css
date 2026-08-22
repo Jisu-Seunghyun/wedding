@@ -317,6 +317,12 @@ a { text-decoration: none; }
   letter-spacing: 0.08em;
 }
 
+.hero__heart {
+  display: inline-block;
+  font-size: 0.8em;
+  letter-spacing: 0;
+}
+
 .hero__date,
 .hero__venue {
   font-size: 0.78rem;
@@ -366,7 +372,7 @@ a { text-decoration: none; }
 
 .child-name {
   margin-left: 4px;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .deceased::before {
@@ -668,6 +674,7 @@ a { text-decoration: none; }
 
 .calendar__weekday {
   font-size: 0.93rem;
+  font-weight: 700;
   opacity: 0.62;
 }
 
@@ -683,7 +690,14 @@ a { text-decoration: none; }
   font-size: 0.8rem;
 }
 
-.calendar__day:nth-child(7n + 1) { color: #a85e67; }
+.calendar__weekday:first-child,
+.calendar__day:nth-child(7n + 1) { color: #951f2d; }
+
+.calendar__weekday:last-child,
+.calendar__day:nth-child(7n) { color: #244f91; }
+
+.calendar__weekday:first-child,
+.calendar__weekday:last-child { opacity: 1; }
 
 .calendar__day.is-today {
   color: var(--paper);
@@ -772,13 +786,23 @@ a { text-decoration: none; }
 }
 
 .footer {
-  padding: 55px 24px calc(55px + var(--safe-bottom));
+  padding: 64px 24px calc(42px + var(--safe-bottom));
   color: rgba(76, 52, 59, 0.5);
   background: #f7f3f0 url('images/layout/Page_Background.jpg') center / cover;
   text-align: center;
 }
 
+.footer__quote {
+  color: rgba(76, 52, 59, 0.72);
+  font-family: var(--font-en), Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+}
+
 .footer__text {
+  margin-top: 3px;
   font-family: var(--font-en), var(--font-ko), Georgia, sans-serif;
   font-size: 0.83rem;
   letter-spacing: 0.08em;
