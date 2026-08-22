@@ -43,7 +43,7 @@
     <button class="photo-modal__nav photo-modal__nav--prev" id="modalPrev" aria-label="이전 사진">&#8249;</button>
     <button class="photo-modal__nav photo-modal__nav--next" id="modalNext" aria-label="다음 사진">&#8250;</button>
     <div class="photo-modal__container" id="modalContainer">
-      <img class="photo-modal__img" id="modalImg" src="" alt="사진" draggable="false">
+      <div class="photo-modal__track" id="modalTrack"></div>
     </div>
     <div class="photo-modal__counter" id="modalCounter"></div>
   </div>
@@ -98,7 +98,7 @@
     </section>
 
     <!-- Page 4: Calendar -->
-    <section class="page page--pink calendar-section" id="calendarSection">
+    <section class="page page--dark calendar-section" id="calendarSection">
       <div class="page__inner utility-page__inner">
         <h2 class="section__title animate-item" data-animate="fade-up">예식 일시</h2>
         <div class="calendar animate-item" data-animate="fade-up" id="calendarGrid"></div>
@@ -158,7 +158,7 @@
     </section>
 
     <!-- Account Section (축의금) -->
-    <section class="page page--pink account" id="account">
+    <section class="page page--dark account" id="account">
       <div class="page__inner utility-page__inner">
         <h2 class="section__title animate-item" data-animate="fade-up">마음 전하실 곳</h2>
 
@@ -186,7 +186,8 @@
 
         <p class="account__desc animate-item" data-animate="fade-up">
           <span class="account__flower-emoji" aria-hidden="true">💐</span>
-          식장 규정상 화환 반입이 불가하여 정중히 사양합니다. 마음만으로도 따뜻한 축하 감사드립니다
+          식장 규정상 화환 반입이 불가합니다.<br>
+          따뜻한 마음만으로도 감사드립니다.
         </p>
       </div>
     </section>

@@ -265,9 +265,7 @@
 
     const grid = $('#calendarGrid');
 
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'];
-    grid.innerHTML = `<div class="calendar__header">${monthNames[month]} ${year}</div>`;
+    grid.innerHTML = `<div class="calendar__header">${month + 1}월</div>`;
 
     // Weekdays
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -347,6 +345,7 @@
     const moreWrap = $('#galleryMoreWrap');
     const moreBtn = $('#galleryMoreBtn');
     const initialCount = 9;
+    const thumbnailImages = galleryImages.map((_, i) => `images/gallery-thumbs/${i + 1}.jpg`);
 
     if (galleryImages.length === 0) {
       const gallerySection = $('#gallery');
@@ -360,7 +359,7 @@
       div.setAttribute('data-animate', 'fade-up');
 
       const img = document.createElement('img');
-      img.src = `images/gallery-thumbs/${i + 1}.jpg`;
+      img.src = thumbnailImages[i];
       img.alt = `갤러리 사진 ${i + 1}`;
       img.loading = 'lazy';
       img.decoding = 'async';
@@ -373,7 +372,7 @@
       }, { once: true });
 
       div.appendChild(img);
-      div.addEventListener('click', () => openPhotoModal(galleryImages, i));
+      div.addEventListener('click', () => openPhotoModal(galleryImages, i, { thumbnailImages }));
       return div;
     }
 
@@ -417,11 +416,54 @@
   let modalImages = [];
   let modalIndex = 0;
   let touchStartX = 0;
-  let touchEndX = 0;
+  let touchCurrentX = 0;
   let touchStartY = 0;
-  let touchEndY = 0;
+  let touchCurrentY = 0;
+  let isModalDragging = false;
   let modalShowCounter = true;
   let modalImageAlt = '사진';
+
+  function buildModalSlides(options) {
+    const track = $('#modalTrack');
+    const thumbnailImages = options.thumbnailImages || [];
+    track.replaceChildren();
+
+    modalImages.forEach((src, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'photo-modal__slide';
+
+      const media = document.createElement('div');
+      media.className = 'photo-modal__media';
+
+      if (thumbnailImages[i]) {
+        media.style.backgroundImage = `url('${thumbnailImages[i]}')`;
+      }
+
+      const img = document.createElement('img');
+      img.className = 'photo-modal__img';
+      img.src = src;
+      img.alt = modalImages.length > 1 ? `${modalImageAlt} ${i + 1}` : modalImageAlt;
+      img.loading = 'eager';
+      img.decoding = 'async';
+      img.draggable = false;
+
+      const revealImage = () => img.classList.add('is-loaded');
+      img.addEventListener('load', revealImage, { once: true });
+      if (img.complete && img.naturalWidth > 0) revealImage();
+
+      media.appendChild(img);
+      slide.appendChild(media);
+      track.appendChild(slide);
+    });
+  }
+
+  function setModalTrackPosition(animate = true, dragOffset = 0) {
+    const track = $('#modalTrack');
+    track.style.transition = animate
+      ? 'transform 380ms cubic-bezier(0.22, 1, 0.36, 1)'
+      : 'none';
+    track.style.transform = `translate3d(calc(${-modalIndex * 100}% + ${dragOffset}px), 0, 0)`;
+  }
 
   function openPhotoModal(images, index, options = {}) {
     const modal = $('#photoModal');
@@ -431,7 +473,8 @@
     modalImageAlt = options.alt || '사진';
     modal.classList.toggle('is-map', options.isMap === true);
     modal.setAttribute('aria-label', options.dialogLabel || '사진 보기');
-    showModalImage();
+    buildModalSlides(options);
+    showModalImage(false);
     modal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
   }
@@ -439,13 +482,12 @@
   function closePhotoModal() {
     $('#photoModal').classList.remove('is-open');
     document.body.style.overflow = '';
+    isModalDragging = false;
   }
 
-  function showModalImage() {
-    const img = $('#modalImg');
+  function showModalImage(animate = true) {
     const counter = $('#modalCounter');
-    img.src = modalImages[modalIndex];
-    img.alt = modalImageAlt;
+    setModalTrackPosition(animate);
     counter.textContent = `${modalIndex + 1} / ${modalImages.length}`;
     counter.hidden = !modalShowCounter;
     $('#modalPrev').style.display = modalIndex > 0 ? '' : 'none';
@@ -457,6 +499,8 @@
     if (newIndex >= 0 && newIndex < modalImages.length) {
       modalIndex = newIndex;
       showModalImage();
+    } else {
+      showModalImage();
     }
   }
 
@@ -467,7 +511,7 @@
 
     const modal = $('#photoModal');
     modal.addEventListener('click', (e) => {
-      if (e.target === modal || e.target.id === 'modalContainer') {
+      if (e.target === modal || e.target.id === 'modalContainer' || e.target.classList.contains('photo-modal__slide')) {
         closePhotoModal();
       }
     });
@@ -484,23 +528,54 @@
     const container = $('#modalContainer');
 
     container.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-      touchStartY = e.changedTouches[0].screenY;
+      if (modalImages.length <= 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchCurrentX = touchStartX;
+      touchStartY = e.touches[0].clientY;
+      touchCurrentY = touchStartY;
+      isModalDragging = true;
     }, { passive: true });
 
+    container.addEventListener('touchmove', (e) => {
+      if (!isModalDragging) return;
+
+      touchCurrentX = e.touches[0].clientX;
+      touchCurrentY = e.touches[0].clientY;
+
+      const deltaX = touchCurrentX - touchStartX;
+      const deltaY = touchCurrentY - touchStartY;
+      if (Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+      e.preventDefault();
+      const isOutOfBounds = (modalIndex === 0 && deltaX > 0)
+        || (modalIndex === modalImages.length - 1 && deltaX < 0);
+      setModalTrackPosition(false, isOutOfBounds ? deltaX * 0.28 : deltaX);
+    }, { passive: false });
+
     container.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      touchEndY = e.changedTouches[0].screenY;
+      if (!isModalDragging) return;
+      touchCurrentX = e.changedTouches[0].clientX;
+      touchCurrentY = e.changedTouches[0].clientY;
+      isModalDragging = false;
       handleSwipe();
+    }, { passive: true });
+
+    container.addEventListener('touchcancel', () => {
+      if (!isModalDragging) return;
+      isModalDragging = false;
+      showModalImage();
     }, { passive: true });
   }
 
   function handleSwipe() {
-    const diffX = touchStartX - touchEndX;
-    const diffY = touchStartY - touchEndY;
+    const diffX = touchStartX - touchCurrentX;
+    const diffY = touchStartY - touchCurrentY;
     const minSwipe = 50;
 
-    if (Math.abs(diffX) < minSwipe || Math.abs(diffX) < Math.abs(diffY)) return;
+    if (Math.abs(diffX) < minSwipe || Math.abs(diffX) < Math.abs(diffY)) {
+      showModalImage();
+      return;
+    }
 
     if (diffX > 0) {
       modalNavigate(1);
