@@ -42,6 +42,7 @@
   --font-script: 'Great Vibes';
   --font-en: 'Cormorant Garamond';
   --font-ko: 'Gowun Dodum';
+  --stable-viewport-height: 100vh;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
@@ -109,7 +110,7 @@ a { text-decoration: none; }
   isolation: isolate;
   display: flex;
   width: 100%;
-  min-height: 100svh;
+  min-height: var(--stable-viewport-height);
   overflow: hidden;
   background-position: center;
   background-size: cover;
@@ -178,7 +179,6 @@ a { text-decoration: none; }
   color: var(--paper);
   background: rgba(33, 26, 28, 0.66);
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
   transition: transform 180ms ease, background 180ms ease;
 }
 
@@ -255,7 +255,7 @@ a { text-decoration: none; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100svh;
+  min-height: var(--stable-viewport-height);
   padding-top: max(54px, calc(38px + var(--safe-top)));
   padding-bottom: max(42px, calc(28px + var(--safe-bottom)));
   text-align: center;
@@ -331,7 +331,7 @@ a { text-decoration: none; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100svh;
+  min-height: var(--stable-viewport-height);
   padding-top: 72px;
   padding-bottom: 72px;
   text-align: center;
@@ -375,7 +375,7 @@ a { text-decoration: none; }
 }
 
 /* Gallery */
-.gallery { min-height: 100svh; }
+.gallery { min-height: var(--stable-viewport-height); }
 
 .gallery__inner {
   padding-top: 62px;
@@ -403,8 +403,6 @@ a { text-decoration: none; }
   overflow: hidden;
   background: #30272a;
   contain: layout paint;
-  content-visibility: auto;
-  contain-intrinsic-size: 110px 110px;
   cursor: pointer;
 }
 
@@ -885,6 +883,18 @@ a { text-decoration: none; }
 
   .hero__inner,
   .greeting__inner { min-height: 760px; }
+}
+
+html.is-kakao-webview { scroll-behavior: auto; }
+
+.is-kakao-webview .bgm-toggle.is-playing {
+  animation: none;
+  background: rgba(33, 26, 28, 0.92);
+}
+
+.is-kakao-webview .bgm-toggle:hover,
+.is-kakao-webview .bgm-toggle:focus-visible {
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

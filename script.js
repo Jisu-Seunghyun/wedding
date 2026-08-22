@@ -13,6 +13,37 @@
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
+  function initStableViewportHeight() {
+    const root = document.documentElement;
+    const isKakaoWebView = /KAKAOTALK/i.test(navigator.userAgent);
+    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+    if (isKakaoWebView) root.classList.add('is-kakao-webview');
+    if (!isKakaoWebView && !isTouchDevice) return;
+
+    let viewportWidth = window.innerWidth;
+    let resizeTimer = null;
+
+    const applyHeight = () => {
+      root.style.setProperty('--stable-viewport-height', `${window.innerHeight}px`);
+      viewportWidth = window.innerWidth;
+    };
+
+    const updateAfterOrientationChange = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyHeight, 250);
+    };
+
+    applyHeight();
+
+    window.addEventListener('orientationchange', updateAfterOrientationChange, { passive: true });
+    window.addEventListener('resize', () => {
+      // Mobile browser chrome changes only the height while scrolling. Ignore it.
+      if (Math.abs(window.innerWidth - viewportWidth) < 80) return;
+      updateAfterOrientationChange();
+    }, { passive: true });
+  }
+
   function getWeddingDateTime() {
     return new Date(`${CONFIG.wedding.date}T${CONFIG.wedding.time}:00`);
   }
@@ -605,6 +636,7 @@
      ═══════════════════════════════════════════ */
 
   function init() {
+    initStableViewportHeight();
     setMetaTags();
     initBgm();
     initCurtain();
