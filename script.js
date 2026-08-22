@@ -13,21 +13,6 @@
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
-  function formatDate(dateStr, timeStr) {
-    const d = new Date(`${dateStr}T${timeStr}:00`);
-    const days = ['일', '월', '화', '수', '목', '금', '토'];
-    const year = d.getFullYear();
-    const month = d.getMonth() + 1;
-    const date = d.getDate();
-    const day = days[d.getDay()];
-    const hours = d.getHours();
-    const minutes = d.getMinutes();
-    const period = hours < 12 ? '오전' : '오후';
-    const h12 = hours % 12 || 12;
-    const minuteStr = minutes > 0 ? ` ${minutes}분` : '';
-    return `${year}년 ${month}월 ${date}일 ${day}요일 ${period} ${h12}시${minuteStr}`;
-  }
-
   function getWeddingDateTime() {
     return new Date(`${CONFIG.wedding.date}T${CONFIG.wedding.time}:00`);
   }
@@ -227,23 +212,14 @@
 
     const parentsHTML = `
       <div class="parent-row">
-        ${parentLine(g.father, g.mother, g.fatherDeceased, g.motherDeceased)}
-        <span class="parent-dot">·</span>
-        의 아들 <span class="child-name">${g.name}</span>
+        ${parentLine(g.father, g.mother, g.fatherDeceased, g.motherDeceased)}의 아들 <span class="child-name">${g.name}</span>
       </div>
       <div class="parent-row">
-        ${parentLine(b.father, b.mother, b.fatherDeceased, b.motherDeceased)}
-        <span class="parent-dot">·</span>
-        의 딸 <span class="child-name">${b.name}</span>
+        ${parentLine(b.father, b.mother, b.fatherDeceased, b.motherDeceased)}의 딸 <span class="child-name">${b.name}</span>
       </div>
     `;
 
     $('#greetingParents').innerHTML = parentsHTML;
-
-    const textImage = $('#greetingTextImage');
-    textImage.addEventListener('load', () => textImage.classList.add('is-loaded'));
-    textImage.addEventListener('error', () => textImage.removeAttribute('src'), { once: true });
-    textImage.src = 'images/page2/1.png';
   }
 
   /* ═══════════════════════════════════════════
@@ -332,42 +308,22 @@
   }
 
   /* ═══════════════════════════════════════════
-     Story Section
-     ═══════════════════════════════════════════ */
-
-  function initStory(storyImages) {
-    $('#storyTitle').textContent = CONFIG.story.title;
-    $('#storyContent').textContent = CONFIG.story.content;
-    $('#storyDate').textContent = formatDate(CONFIG.wedding.date, CONFIG.wedding.time);
-    $('#storyVenue').textContent = `${CONFIG.wedding.venue} ${CONFIG.wedding.hall}`;
-    $('#storyAddress').textContent = CONFIG.wedding.address;
-
-    const slots = [$('#storyPhotoOne'), $('#storyPhotoTwo')];
-    slots.forEach((slot, index) => {
-      const src = storyImages[index];
-      if (!slot || !src) {
-        if (slot) slot.style.display = 'none';
-        return;
-      }
-
-      slot.innerHTML = `<img src="${src}" alt="스토리 사진 ${index + 1}" loading="lazy" decoding="async">`;
-      slot.addEventListener('click', () => openPhotoModal(storyImages, index));
-    });
-  }
-
-  /* ═══════════════════════════════════════════
      Gallery Section
      ═══════════════════════════════════════════ */
 
   function initGallery(galleryImages) {
     const grid = $('#galleryGrid');
+    const moreWrap = $('#galleryMoreWrap');
+    const moreBtn = $('#galleryMoreBtn');
+    const initialCount = 9;
+
     if (galleryImages.length === 0) {
       const gallerySection = $('#gallery');
       if (gallerySection) gallerySection.style.display = 'none';
       return;
     }
 
-    galleryImages.forEach((src, i) => {
+    function createGalleryItem(src, i) {
       const div = document.createElement('div');
       div.className = 'gallery__item animate-item';
       div.setAttribute('data-animate', 'fade-up');
@@ -387,8 +343,40 @@
 
       div.appendChild(img);
       div.addEventListener('click', () => openPhotoModal(galleryImages, i));
-      grid.appendChild(div);
-    });
+      return div;
+    }
+
+    function appendGalleryItems(start, end, revealImmediately = false) {
+      const fragment = document.createDocumentFragment();
+      const addedItems = [];
+
+      galleryImages.slice(start, end).forEach((src, offset) => {
+        const item = createGalleryItem(src, start + offset);
+        addedItems.push(item);
+        fragment.appendChild(item);
+      });
+
+      grid.appendChild(fragment);
+
+      if (revealImmediately) {
+        requestAnimationFrame(() => {
+          addedItems.forEach((item) => item.classList.add('is-visible'));
+        });
+      }
+    }
+
+    appendGalleryItems(0, Math.min(initialCount, galleryImages.length));
+
+    if (galleryImages.length <= initialCount) {
+      moreWrap.hidden = true;
+      return;
+    }
+
+    moreBtn.addEventListener('click', () => {
+      appendGalleryItems(initialCount, galleryImages.length, true);
+      moreBtn.setAttribute('aria-expanded', 'true');
+      moreWrap.hidden = true;
+    }, { once: true });
   }
 
   /* ═══════════════════════════════════════════
@@ -401,12 +389,19 @@
   let touchEndX = 0;
   let touchStartY = 0;
   let touchEndY = 0;
+  let modalShowCounter = true;
+  let modalImageAlt = '사진';
 
-  function openPhotoModal(images, index) {
+  function openPhotoModal(images, index, options = {}) {
+    const modal = $('#photoModal');
     modalImages = images;
     modalIndex = index;
+    modalShowCounter = options.showCounter !== false;
+    modalImageAlt = options.alt || '사진';
+    modal.classList.toggle('is-map', options.isMap === true);
+    modal.setAttribute('aria-label', options.dialogLabel || '사진 보기');
     showModalImage();
-    $('#photoModal').classList.add('is-open');
+    modal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
   }
 
@@ -417,8 +412,11 @@
 
   function showModalImage() {
     const img = $('#modalImg');
+    const counter = $('#modalCounter');
     img.src = modalImages[modalIndex];
-    $('#modalCounter').textContent = `${modalIndex + 1} / ${modalImages.length}`;
+    img.alt = modalImageAlt;
+    counter.textContent = `${modalIndex + 1} / ${modalImages.length}`;
+    counter.hidden = !modalShowCounter;
     $('#modalPrev').style.display = modalIndex > 0 ? '' : 'none';
     $('#modalNext').style.display = modalIndex < modalImages.length - 1 ? '' : 'none';
   }
@@ -486,13 +484,23 @@
 
   function initLocation() {
     const w = CONFIG.wedding;
+    const mapPath = 'images/location/map.png';
+    const mapImg = $('#locationMapImg');
     $('#locationVenue').textContent = w.venue;
-    $('#locationHall').textContent = w.hall;
     $('#locationAddress').textContent = w.address;
     $('#locationTel').textContent = w.tel ? `Tel. ${w.tel}` : '';
-    $('#locationMapImg').src = 'images/location/1.jpg';
+    mapImg.src = mapPath;
     $('#kakaoMapBtn').href = w.mapLinks.kakao || '#';
     $('#naverMapBtn').href = w.mapLinks.naver || '#';
+
+    $('#locationMapBtn').addEventListener('click', () => {
+      openPhotoModal([mapPath], 0, {
+        showCounter: false,
+        isMap: true,
+        dialogLabel: '약도 크게 보기',
+        alt: '오시는 길 약도 확대 이미지'
+      });
+    });
 
     $('#copyAddressBtn').addEventListener('click', () => {
       copyToClipboard(w.address, '주소가 복사되었습니다');
@@ -610,10 +618,8 @@
     initAccounts();
     initFooter();
 
-    const storyImages = numberedImagePaths('story', CONFIG.images.storyCount);
     const galleryImages = numberedImagePaths('gallery', CONFIG.images.galleryCount);
 
-    initStory(storyImages);
     initGallery(galleryImages);
     initScrollAnimations();
   }

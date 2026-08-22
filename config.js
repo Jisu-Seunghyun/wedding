@@ -6,7 +6,6 @@
  *
  * 이미지 폴더 구조 (파일명 규칙):
  *   images/hero/1.jpg      - 메인 사진 (1장, 필수)
- *   images/story/1.jpg, 2.jpg, ...  - 스토리 사진들
  *   images/gallery/1.jpg, 2.jpg, ... - 갤러리 원본 사진들
  *   images/gallery-thumbs/1.jpg, ... - 갤러리 목록용 썸네일
  *   images/location/1.jpg  - 약도/지도 이미지 (1장)
@@ -19,7 +18,6 @@ const CONFIG = {
 
   // 이미지 파일 개수와 실제 폴더의 번호를 맞춰 주세요.
   images: {
-    storyCount: 2,
     galleryCount: 22
   },
 
@@ -46,8 +44,7 @@ const CONFIG = {
     date: "2026-10-03",
     time: "18:30",
     venue: "아펠가모 반포",
-    hall: "LL층",
-    address: "서울특별시 서초구 반포대로 235",
+    address: "서울특별시 서초구 반포대로 235 LL층",
     tel: "",
     mapLinks: {
       kakao: "https://kko.to/YVeHB8K_4H",
@@ -59,12 +56,6 @@ const CONFIG = {
   greeting: {
     title: "소중한 분들을 초대합니다",
     content: "안녕하세요 황승현 이지수 입니다. 감사합니다!"
-  },
-
-  // ── 우리의 이야기 ──
-  story: {
-    title: "우리의 이야기",
-    content: "이지수 황승현이 만나서 결혼해용~ 오셔서 축하해주세요~ 밥이 맛있어요~ 저녁 드시고 가세요~~"
   },
 
   // ── 오시는 길 ──

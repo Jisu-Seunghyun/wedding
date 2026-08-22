@@ -76,81 +76,30 @@
     <!-- Page 2: Invitation -->
     <section class="page page--dark greeting" id="greeting">
       <div class="page__inner greeting__inner">
-        <div class="greeting__image-slot animate-item" data-animate="fade-in">
-          <img class="greeting__image" id="greetingTextImage" alt="초대 문구" decoding="async">
+        <h2 class="section__title greeting__title animate-item" data-animate="fade-up">초대합니다</h2>
+        <div class="greeting__message animate-item" data-animate="fade-up">
+          <p>승현 지수 결혼합니다.<br>새로운 믿음의 가정을 이루는<br>진실된 약속을 맺으려고 합니다.<br>저희의 시작을 따뜻한 마음으로 축복해주세요<br>더 없는 기쁨으로 간직하겠습니다.</p>
         </div>
         <div class="greeting__parents animate-item" data-animate="fade-up" id="greetingParents"></div>
       </div>
     </section>
 
-    <!-- Page 3: Story I -->
-    <section class="page page--pink story-page story-page--one" id="story">
-      <div class="page__inner story-page__inner">
-        <div class="story-composition animate-item" data-animate="fade-up">
-          <button class="story-photo story-photo--one" id="storyPhotoOne" type="button" aria-label="첫 번째 스토리 사진 크게 보기"></button>
-          <article class="story-card story-card--one">
-            <p class="page-kicker">Our Story</p>
-            <h2 class="section__title" id="storyTitle"></h2>
-            <p class="story__text" id="storyContent"></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Page 4: Story II -->
-    <section class="page page--pink story-page story-page--two" id="storySecondPage">
-      <div class="page__inner story-page__inner">
-        <div class="story-composition animate-item" data-animate="fade-up">
-          <button class="story-photo story-photo--two" id="storyPhotoTwo" type="button" aria-label="두 번째 스토리 사진 크게 보기"></button>
-          <article class="story-card story-card--two">
-            <p class="page-kicker">The Wedding Day</p>
-            <p class="story-card__date" id="storyDate"></p>
-            <p class="story-card__venue" id="storyVenue"></p>
-            <p class="story-card__address" id="storyAddress"></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Page 5: Gallery -->
+    <!-- Page 3: Gallery -->
     <section class="page page--dark gallery" id="gallery">
       <div class="page__inner gallery__inner">
         <header class="gallery__heading animate-item" data-animate="fade-up">
-          <p class="page-kicker">Moments</p>
-          <h2 class="section__title">Gallery</h2>
+          <h2 class="section__title">갤러리</h2>
         </header>
         <div class="gallery__grid" id="galleryGrid"></div>
-      </div>
-    </section>
-
-    <!-- Page 6: Location -->
-    <section class="page page--dark location" id="location">
-      <div class="page__inner location__inner">
-        <header class="location__heading animate-item" data-animate="fade-up">
-          <p class="page-kicker">Location</p>
-          <h2 class="section__title">오시는 길</h2>
-        </header>
-        <div class="location__info animate-item" data-animate="fade-up">
-          <p class="location__venue" id="locationVenue"></p>
-          <p class="location__hall" id="locationHall"></p>
-          <p class="location__address" id="locationAddress"></p>
-          <p class="location__tel" id="locationTel"></p>
-          <button class="btn btn--text location__copy" id="copyAddressBtn">주소 복사</button>
-        </div>
-        <div class="location__map animate-item" data-animate="fade-in">
-          <img class="location__map-img" id="locationMapImg" src="" alt="약도" loading="lazy">
-        </div>
-        <div class="location__links animate-item" data-animate="fade-up">
-          <a class="btn btn--outline" id="kakaoMapBtn" href="#" target="_blank" rel="noopener">카카오맵</a>
-          <a class="btn btn--outline" id="naverMapBtn" href="#" target="_blank" rel="noopener">네이버지도</a>
+        <div class="gallery__more-wrap animate-item" id="galleryMoreWrap" data-animate="fade-up">
+          <button class="btn btn--outline gallery__more" id="galleryMoreBtn" type="button" aria-controls="galleryGrid" aria-expanded="false">더보기</button>
         </div>
       </div>
     </section>
 
-    <!-- Calendar Actions -->
+    <!-- Page 4: Calendar -->
     <section class="page page--pink calendar-section" id="calendarSection">
       <div class="page__inner utility-page__inner">
-        <p class="page-kicker animate-item" data-animate="fade-up">Calendar</p>
         <h2 class="section__title animate-item" data-animate="fade-up">예식 일시</h2>
         <div class="calendar animate-item" data-animate="fade-up" id="calendarGrid"></div>
         <div class="calendar-actions animate-item" data-animate="fade-up">
@@ -160,12 +109,58 @@
       </div>
     </section>
 
+    <!-- Page 5: Location -->
+    <section class="page page--dark location" id="location">
+      <div class="page__inner location__inner">
+        <header class="location__heading animate-item" data-animate="fade-up">
+          <h2 class="section__title">오시는 길</h2>
+        </header>
+        <div class="location__info animate-item" data-animate="fade-up">
+          <p class="location__venue" id="locationVenue"></p>
+          <p class="location__address" id="locationAddress"></p>
+          <p class="location__tel" id="locationTel"></p>
+          <button class="btn btn--text location__copy" id="copyAddressBtn">주소 복사</button>
+        </div>
+        <button class="location__map animate-item" id="locationMapBtn" type="button" data-animate="fade-in" aria-label="약도 크게 보기" aria-haspopup="dialog">
+          <img class="location__map-img" id="locationMapImg" src="" alt="약도" loading="lazy">
+        </button>
+        <div class="location__links animate-item" data-animate="fade-up">
+          <a class="btn btn--outline" id="kakaoMapBtn" href="#" target="_blank" rel="noopener">카카오맵</a>
+          <a class="btn btn--outline" id="naverMapBtn" href="#" target="_blank" rel="noopener">네이버지도</a>
+        </div>
+        <div class="location__directions animate-item" data-animate="fade-up">
+          <section class="direction-guide">
+            <h3 class="direction-guide__title"><span class="direction-guide__emoji" aria-hidden="true">🚌</span>버스 안내</h3>
+            <div class="direction-guide__content">
+              <p>405번, 740번, 5413번</p>
+              <p>서울지방조달청·서울성모병원 하차</p>
+            </div>
+          </section>
+
+          <section class="direction-guide">
+            <h3 class="direction-guide__title"><span class="direction-guide__emoji" aria-hidden="true">🚇</span>지하철 안내</h3>
+            <div class="direction-guide__content">
+              <p>3·7·9호선 고속터미널역 5번 출구에서 도보 약 3분</p>
+              <p>서래공원 방향 횡단보도 건넌 후 첫 번째 건물</p>
+            </div>
+          </section>
+
+          <section class="direction-guide">
+            <h3 class="direction-guide__title"><span class="direction-guide__emoji" aria-hidden="true">🚗</span>자가용 안내</h3>
+            <div class="direction-guide__content">
+              <p>아펠가모 반포(반포 효성빌딩) 지하주차장</p>
+              <p>서울 서초구 반포대로 235</p>
+              <p class="direction-guide__notice">[예식 하객 2시간 무료 주차 / 홀에서 주차 정산]</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
     <!-- Account Section (축의금) -->
     <section class="page page--pink account" id="account">
       <div class="page__inner utility-page__inner">
-        <p class="page-kicker animate-item" data-animate="fade-up">For Your Heart</p>
         <h2 class="section__title animate-item" data-animate="fade-up">마음 전하실 곳</h2>
-        <p class="account__desc animate-item" data-animate="fade-up">축하의 마음을 담아 축의금을 전달해 보세요.</p>
 
         <!-- Groom Accounts -->
         <div class="accordion animate-item" data-animate="fade-up">
@@ -188,6 +183,11 @@
             <div class="accordion__panel-inner" id="brideAccountList"></div>
           </div>
         </div>
+
+        <p class="account__desc animate-item" data-animate="fade-up">
+          <span class="account__flower-emoji" aria-hidden="true">💐</span>
+          식장 규정상 화환 반입이 불가하여 정중히 사양합니다. 마음만으로도 따뜻한 축하 감사드립니다
+        </p>
       </div>
     </section>
 
