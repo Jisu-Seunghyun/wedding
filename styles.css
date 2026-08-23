@@ -227,6 +227,8 @@ a { text-decoration: none; }
   background: #f7f3f0 url('images/layout/Page_Background.jpg') center / cover;
 }
 
+.curtain[hidden] { display: none; }
+
 .curtain.is-open {
   opacity: 0;
   pointer-events: none;
