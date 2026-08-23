@@ -49,6 +49,12 @@ const CONFIG = {
     mapLinks: {
       kakao: "https://kko.to/YVeHB8K_4H",
       naver: "https://naver.me/5PVaG0Ha"
+    },
+    naverMap: {
+      clientId: "3mwbx83t7z",
+      latitude: 37.5006573282024,
+      longitude: 127.003239742545,
+      zoom: 17
     }
   },
 

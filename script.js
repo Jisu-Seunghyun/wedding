@@ -596,25 +596,121 @@
      Location Section
      ═══════════════════════════════════════════ */
 
+  function loadNaverMapApi(clientId) {
+    if (window.naver && window.naver.maps) return Promise.resolve();
+
+    return new Promise((resolve, reject) => {
+      const callbackName = '__onNaverMapReady';
+      let settled = false;
+
+      const finish = (handler, value) => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeoutId);
+        delete window[callbackName];
+        delete window.navermap_authFailure;
+        handler(value);
+      };
+
+      window[callbackName] = () => finish(resolve);
+      window.navermap_authFailure = () => finish(reject, new Error('NAVER Maps authentication failed'));
+
+      const script = document.createElement('script');
+      script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${encodeURIComponent(clientId)}&callback=${callbackName}`;
+      script.async = true;
+      script.dataset.naverMapApi = 'true';
+      script.addEventListener('error', () => finish(reject, new Error('NAVER Maps script failed to load')), { once: true });
+
+      const timeoutId = window.setTimeout(
+        () => finish(reject, new Error('NAVER Maps loading timed out')),
+        12000
+      );
+
+      document.head.appendChild(script);
+    });
+  }
+
+  async function initNaverMap(wedding) {
+    const mapWrap = $('#locationMapWrap');
+    const status = $('#locationMapStatus');
+    const settings = wedding.naverMap;
+
+    if (!settings || !settings.clientId) {
+      status.textContent = '지도 설정을 확인해 주세요.';
+      return;
+    }
+
+    try {
+      await loadNaverMapApi(settings.clientId);
+
+      const position = new naver.maps.LatLng(settings.latitude, settings.longitude);
+      const map = new naver.maps.Map('naverMap', {
+        center: position,
+        zoom: settings.zoom || 17,
+        zoomControl: true,
+        zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT },
+        mapDataControl: false,
+        scaleControl: false,
+        mapTypeControl: false,
+        scrollWheel: false,
+        keyboardShortcuts: false
+      });
+
+      const marker = new naver.maps.Marker({
+        position,
+        map,
+        title: wedding.venue
+      });
+
+      const infoWindow = new naver.maps.InfoWindow({
+        content: `<div class="naver-map-info"><strong>${wedding.venue}</strong><span>${wedding.address}</span></div>`,
+        borderWidth: 0,
+        backgroundColor: 'transparent',
+        disableAnchor: true,
+        pixelOffset: new naver.maps.Point(0, -10)
+      });
+
+      naver.maps.Event.addListener(marker, 'click', () => {
+        if (infoWindow.getMap()) {
+          infoWindow.close();
+        } else {
+          infoWindow.open(map, marker);
+        }
+      });
+
+      mapWrap.classList.add('is-ready');
+      status.hidden = true;
+    } catch (error) {
+      mapWrap.classList.add('is-error');
+      status.textContent = '네이버 지도를 불러오지 못했습니다.';
+    }
+  }
+
+  function observeNaverMap(wedding) {
+    const mapWrap = $('#locationMapWrap');
+
+    if (!('IntersectionObserver' in window)) {
+      initNaverMap(wedding);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      initNaverMap(wedding);
+    }, { rootMargin: '300px 0px' });
+
+    observer.observe(mapWrap);
+  }
+
   function initLocation() {
     const w = CONFIG.wedding;
-    const mapPath = 'images/location/map.png';
-    const mapImg = $('#locationMapImg');
     $('#locationVenue').textContent = w.venue;
     $('#locationAddress').textContent = w.address;
     $('#locationTel').textContent = w.tel ? `Tel. ${w.tel}` : '';
-    mapImg.src = mapPath;
     $('#kakaoMapBtn').href = w.mapLinks.kakao || '#';
     $('#naverMapBtn').href = w.mapLinks.naver || '#';
-
-    $('#locationMapBtn').addEventListener('click', () => {
-      openPhotoModal([mapPath], 0, {
-        showCounter: false,
-        isMap: true,
-        dialogLabel: '약도 크게 보기',
-        alt: '오시는 길 약도 확대 이미지'
-      });
-    });
+    observeNaverMap(w);
 
     $('#copyAddressBtn').addEventListener('click', () => {
       copyToClipboard(w.address, '주소가 복사되었습니다');

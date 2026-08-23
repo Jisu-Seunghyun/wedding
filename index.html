@@ -121,9 +121,11 @@
           <p class="location__tel" id="locationTel"></p>
           <button class="btn btn--text location__copy" id="copyAddressBtn">주소 복사</button>
         </div>
-        <button class="location__map animate-item" id="locationMapBtn" type="button" data-animate="fade-in" aria-label="약도 크게 보기" aria-haspopup="dialog">
-          <img class="location__map-img" id="locationMapImg" src="" alt="약도" loading="lazy">
-        </button>
+        <div class="location__map animate-item" id="locationMapWrap" data-animate="fade-in">
+          <img class="location__map-img" src="images/location/map.png" alt="아펠가모 반포 약도" loading="lazy">
+          <div class="location__map-canvas" id="naverMap" tabindex="0" aria-label="아펠가모 반포 네이버 지도"></div>
+          <p class="location__map-status" id="locationMapStatus">지도를 준비하는 중입니다.</p>
+        </div>
         <div class="location__links animate-item" data-animate="fade-up">
           <a class="btn btn--outline" id="kakaoMapBtn" href="#" target="_blank" rel="noopener">카카오맵</a>
           <a class="btn btn--outline" id="naverMapBtn" href="#" target="_blank" rel="noopener">네이버지도</a>
