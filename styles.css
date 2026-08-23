@@ -429,6 +429,17 @@ a { text-decoration: none; }
   transform: scale(1.04);
 }
 
+.gallery__item.gallery__item--row-reveal {
+  transform: translateY(12px) scale(0.988);
+  transition-duration: 1400ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.gallery__item.gallery__item--row-reveal.is-visible {
+  transform: translateY(0) scale(1);
+}
+
 .gallery__more-wrap {
   display: flex;
   justify-content: center;
@@ -508,8 +519,11 @@ a { text-decoration: none; }
   z-index: 1;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 180ms ease;
 }
 
+.location__map.is-ready .location__map-canvas { opacity: 1; }
 .location__map.is-error .location__map-canvas { display: none; }
 
 .location__map-status {

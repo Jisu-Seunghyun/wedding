@@ -353,8 +353,15 @@
     const grid = $('#galleryGrid');
     const moreWrap = $('#galleryMoreWrap');
     const moreBtn = $('#galleryMoreBtn');
+    const collapseWrap = $('#galleryCollapseWrap');
+    const collapseBtn = $('#galleryCollapseBtn');
     const initialCount = 9;
+    const itemsPerRow = 3;
+    const rowDelay = 180;
+    const rowTransitionDuration = 1400;
     const thumbnailImages = galleryImages.map((_, i) => `images/gallery-thumbs/${i + 1}.jpg`);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let collapseRevealTimer = null;
 
     if (galleryImages.length === 0) {
       const gallerySection = $('#gallery');
@@ -385,23 +392,37 @@
       return div;
     }
 
-    function appendGalleryItems(start, end, revealImmediately = false) {
+    function appendGalleryItems(start, end, revealByRow = false) {
       const fragment = document.createDocumentFragment();
       const addedItems = [];
 
       galleryImages.slice(start, end).forEach((src, offset) => {
         const item = createGalleryItem(src, start + offset);
+
+        if (revealByRow) {
+          const delay = reduceMotion ? 0 : Math.floor(offset / itemsPerRow) * rowDelay;
+          item.classList.add('gallery__item--extra', 'gallery__item--row-reveal');
+          item.style.transitionDelay = `${delay}ms`;
+        }
+
         addedItems.push(item);
         fragment.appendChild(item);
       });
 
       grid.appendChild(fragment);
 
-      if (revealImmediately) {
+      if (revealByRow) {
         requestAnimationFrame(() => {
-          addedItems.forEach((item) => item.classList.add('is-visible'));
+          requestAnimationFrame(() => {
+            addedItems.forEach((item) => item.classList.add('is-visible'));
+          });
         });
       }
+
+      const rowCount = Math.ceil(addedItems.length / itemsPerRow);
+      return reduceMotion || !revealByRow
+        ? 0
+        : Math.max(0, rowCount - 1) * rowDelay + rowTransitionDuration;
     }
 
     appendGalleryItems(0, Math.min(initialCount, galleryImages.length));
@@ -412,10 +433,34 @@
     }
 
     moreBtn.addEventListener('click', () => {
-      appendGalleryItems(initialCount, galleryImages.length, true);
+      const revealDuration = appendGalleryItems(initialCount, galleryImages.length, true);
       moreBtn.setAttribute('aria-expanded', 'true');
       moreWrap.hidden = true;
-    }, { once: true });
+      collapseWrap.hidden = true;
+      collapseWrap.classList.remove('is-visible');
+
+      collapseRevealTimer = window.setTimeout(() => {
+        collapseWrap.hidden = false;
+        requestAnimationFrame(() => collapseWrap.classList.add('is-visible'));
+      }, revealDuration);
+    });
+
+    collapseBtn.addEventListener('click', () => {
+      if (collapseRevealTimer) window.clearTimeout(collapseRevealTimer);
+      $$('.gallery__item--extra', grid).forEach((item) => item.remove());
+      collapseWrap.hidden = true;
+      collapseWrap.classList.remove('is-visible');
+      moreWrap.hidden = false;
+      moreWrap.classList.add('is-visible');
+      moreBtn.setAttribute('aria-expanded', 'false');
+
+      requestAnimationFrame(() => {
+        moreBtn.scrollIntoView({
+          behavior: reduceMotion ? 'auto' : 'smooth',
+          block: 'center'
+        });
+      });
+    });
   }
 
   /* ═══════════════════════════════════════════
@@ -625,10 +670,21 @@
 
   function initNaverMap(wedding) {
     const mapWrap = $('#locationMapWrap');
+    const mapCanvas = $('#naverMap');
     const status = $('#locationMapStatus');
     const settings = wedding.naverMap;
+    let tileObserver = null;
+    let tileTimeoutId = null;
+    let mapFailed = false;
+
+    const stopWatchingTiles = () => {
+      if (tileObserver) tileObserver.disconnect();
+      if (tileTimeoutId) window.clearTimeout(tileTimeoutId);
+    };
 
     const showFallback = (message) => {
+      mapFailed = true;
+      stopWatchingTiles();
       mapWrap.classList.remove('is-ready');
       mapWrap.classList.add('is-error');
       status.hidden = false;
@@ -681,9 +737,39 @@
           }
         });
 
-        mapWrap.classList.remove('is-error');
-        mapWrap.classList.add('is-ready');
-        status.hidden = true;
+        const revealMap = () => {
+          if (mapFailed || mapWrap.classList.contains('is-ready')) return;
+          stopWatchingTiles();
+          mapWrap.classList.remove('is-error');
+          mapWrap.classList.add('is-ready');
+          status.hidden = true;
+        };
+
+        const checkMapTiles = () => {
+          const tiles = mapCanvas.querySelectorAll('img[src*="pstatic.net/styles/"]');
+
+          for (const tile of tiles) {
+            if (tile.complete && tile.naturalWidth > 0) {
+              revealMap();
+              return;
+            }
+
+            if (!tile.dataset.loadObserved) {
+              tile.dataset.loadObserved = 'true';
+              tile.addEventListener('load', revealMap, { once: true });
+            }
+          }
+        };
+
+        tileObserver = new MutationObserver(checkMapTiles);
+        tileObserver.observe(mapCanvas, { childList: true, subtree: true });
+        checkMapTiles();
+
+        tileTimeoutId = window.setTimeout(() => {
+          if (!mapWrap.classList.contains('is-ready')) {
+            showFallback('네이버 지도 타일을 불러오지 못했습니다.');
+          }
+        }, 20000);
       } catch (error) {
         showFallback('네이버 지도를 표시하지 못했습니다.');
       }
