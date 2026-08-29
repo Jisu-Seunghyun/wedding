@@ -155,6 +155,18 @@ a { text-decoration: none; }
   line-height: 1.2;
 }
 
+.section-decoration {
+  display: block;
+  height: auto;
+  margin: 0 auto 6px;
+  object-fit: contain;
+}
+
+.section-decoration--pigeon {
+  width: 47.2px;
+  margin-bottom: 4.2px;
+}
+
 .section__ornament {
   display: block;
   width: 42px;
