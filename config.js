@@ -68,6 +68,18 @@ const CONFIG = {
   // (mapLinks는 wedding 객체 내에 포함)
 
   // ── 마음 전하실 곳 ──
+  // 전화번호는 숫자와 하이픈 형식으로 입력해 주세요. 예: "010-1234-5678"
+  contacts: {
+    groom: [
+      { role: "아버지", name: "황성재", phone: "000-00000-0000" },
+      { role: "어머니", name: "김미정", phone: "000-00000-0000" }
+    ],
+    bride: [
+      { role: "아버지", name: "이철원", phone: "000-00000-0000" },
+      { role: "어머니", name: "이은정", phone: "000-00000-0000" }
+    ]
+  },
+
   accounts: {
     groom: [
       { role: "신랑", name: "황승현", bank: "국민은행", number: "037401-04-068119" },

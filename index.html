@@ -15,8 +15,8 @@
 
   <title>황승현 ♥ 이지수 결혼합니다</title>
 
-  <link rel="stylesheet" href="styles.css?v=20260823-7">
-  <script src="config.js?v=20260823-7"></script>
+  <link rel="stylesheet" href="styles.css?v=20260829-8">
+  <script src="config.js?v=20260829-7"></script>
 </head>
 <body>
 
@@ -48,6 +48,24 @@
     <div class="photo-modal__counter" id="modalCounter"></div>
   </div>
 
+  <!-- ─── Family Contact Modal ─── -->
+  <div id="contactModal" class="contact-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="contactModalTitle">
+    <div class="contact-modal__panel" role="document" tabindex="-1">
+      <button class="contact-modal__close" id="contactModalClose" type="button" aria-label="닫기">&times;</button>
+      <h2 class="contact-modal__title" id="contactModalTitle">혼주에게 연락하기</h2>
+      <div class="contact-modal__grid">
+        <section class="contact-modal__side" aria-labelledby="groomContactTitle">
+          <h3 class="contact-modal__side-title" id="groomContactTitle">신랑측</h3>
+          <div class="contact-modal__list" id="groomContactList"></div>
+        </section>
+        <section class="contact-modal__side" aria-labelledby="brideContactTitle">
+          <h3 class="contact-modal__side-title" id="brideContactTitle">신부측</h3>
+          <div class="contact-modal__list" id="brideContactList"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
   <!-- Main Content -->
   <main id="mainContent" class="main-content">
     <!-- Page 1: Cover -->
@@ -76,9 +94,13 @@
     <!-- Page 2: Invitation -->
     <section class="page page--dark greeting" id="greeting">
       <div class="page__inner greeting__inner">
+        <div class="greeting__text-image animate-item" data-animate="fade-up">
+          <img class="greeting__text-art" src="images/text/text_1.png?v=20260826-6" alt="불의를 기뻐하지 않으며" decoding="async">
+        </div>
         <h2 class="section__title greeting__title animate-item" data-animate="fade-up">초대합니다</h2>
         <div class="greeting__message animate-item" data-animate="fade-up">
-          <p>승현 지수 결혼합니다.<br>새로운 믿음의 가정을 이루는<br>진실된 약속을 맺으려고 합니다.<br>저희의 시작을 따뜻한 마음으로 축복해주세요<br>더 없는 기쁨으로 간직하겠습니다.</p>
+          <p>사랑 안에 두려움이 없고<br>사랑은 모든 것을 견디어 냅니다.<br>이제 서로가 서로에게 돕는 베필이 되어<br>하나님 보시기에 아름다운 가정으로 살겠습니다.</p>
+          <p>저희의 시작을 따뜻한 마음으로 축복해주세요<br>더 없는 기쁨으로 간직하겠습니다.</p>
         </div>
         <div class="greeting__parents animate-item" data-animate="fade-up" id="greetingParents"></div>
       </div>
@@ -193,6 +215,9 @@
           식장 규정상 화환 반입이 불가합니다.<br>
           따뜻한 마음만으로도 감사드립니다.
         </p>
+        <button class="btn btn--outline account__contact-button animate-item" id="contactModalOpen" type="button" data-animate="fade-up">
+          혼주에게 연락하기
+        </button>
       </div>
     </section>
 
@@ -204,6 +229,6 @@
 
   </main>
 
-  <script src="script.js?v=20260823-7"></script>
+  <script src="script.js?v=20260829-8"></script>
 </body>
 </html>

@@ -849,6 +849,149 @@
     });
   }
 
+  function sanitizePhoneNumber(phone) {
+    const value = String(phone || '').trim();
+    if (!value) return '';
+    return value.replace(/[^\d+]/g, '').replace(/(?!^)\+/g, '');
+  }
+
+  function createPhoneIcon() {
+    return `
+      <svg viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+        <path d="M164.9 24.6C157.2 6 136.9-3.9 117.5 1.4l-88 24C12.1 30.2 0 46 0 64c0 247.4 200.6 448 448 448 18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368c-70.4-33.3-127.4-90.3-160.7-160.7l49.3-40.3c13.7-11.2 18.4-30 11.6-46.3l-40-96z"></path>
+      </svg>
+    `;
+  }
+
+  function createMessageIcon() {
+    return `
+      <svg viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+        <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l217.6 163.2c11.4 8.5 27 8.5 38.4 0l217.6-163.2C504.9 141.3 512 127.1 512 112c0-26.5-21.5-48-48-48H48zM0 176v208c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"></path>
+      </svg>
+    `;
+  }
+
+  function renderContactList(contacts, containerId) {
+    const container = $(`#${containerId}`);
+    container.replaceChildren();
+
+    contacts.forEach((contact) => {
+      const person = document.createElement('div');
+      person.className = 'contact-modal__person';
+
+      const name = document.createElement('span');
+      name.className = 'contact-modal__name';
+      const displayName = [contact.role, contact.name].filter(Boolean).join(' ');
+      if (contact.role) {
+        const role = document.createElement('span');
+        role.className = 'contact-modal__role';
+        role.textContent = contact.role;
+        name.append(role, document.createTextNode(` ${contact.name}`));
+      } else {
+        name.textContent = contact.name;
+      }
+
+      const phone = sanitizePhoneNumber(contact.phone);
+      const actions = document.createElement('div');
+      actions.className = 'contact-modal__actions';
+
+      const message = document.createElement(phone ? 'a' : 'button');
+      message.className = 'contact-modal__message';
+      message.innerHTML = createMessageIcon();
+
+      const call = document.createElement(phone ? 'a' : 'button');
+      call.className = 'contact-modal__call';
+      call.innerHTML = createPhoneIcon();
+
+      if (phone) {
+        message.href = `sms:${phone}`;
+        message.setAttribute('aria-label', `${displayName}에게 문자 보내기`);
+        call.href = `tel:${phone}`;
+        call.setAttribute('aria-label', `${displayName}에게 전화하기`);
+      } else {
+        message.type = 'button';
+        message.disabled = true;
+        message.setAttribute('aria-label', `${displayName} 문자번호 미등록`);
+        message.title = '전화번호가 아직 등록되지 않았습니다.';
+        call.type = 'button';
+        call.disabled = true;
+        call.setAttribute('aria-label', `${displayName} 전화번호 미등록`);
+        call.title = '전화번호가 아직 등록되지 않았습니다.';
+      }
+
+      actions.append(message, call);
+      person.append(name, actions);
+      container.appendChild(person);
+    });
+  }
+
+  function initContactModal() {
+    const modal = $('#contactModal');
+    const panel = modal.querySelector('.contact-modal__panel');
+    const openButton = $('#contactModalOpen');
+    const closeButton = $('#contactModalClose');
+    const contacts = CONFIG.contacts || { groom: [], bride: [] };
+    let previousFocus = null;
+    let previousOverflow = '';
+    let previousPaddingRight = '';
+
+    renderContactList(contacts.groom || [], 'groomContactList');
+    renderContactList(contacts.bride || [], 'brideContactList');
+
+    function openContactModal() {
+      previousFocus = document.activeElement;
+      previousOverflow = document.body.style.overflow;
+      previousPaddingRight = document.body.style.paddingRight;
+
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.body.style.overflow = 'hidden';
+
+      modal.setAttribute('aria-hidden', 'false');
+      modal.classList.add('is-open');
+      requestAnimationFrame(() => closeButton.focus());
+    }
+
+    function closeContactModal() {
+      if (!modal.classList.contains('is-open')) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    }
+
+    openButton.addEventListener('click', openContactModal);
+    closeButton.addEventListener('click', closeContactModal);
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeContactModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!modal.classList.contains('is-open')) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeContactModal();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+      const focusable = $$('a[href], button:not(:disabled)', panel);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  }
+
   /* ═══════════════════════════════════════════
      Footer
      ═══════════════════════════════════════════ */
@@ -902,6 +1045,7 @@
     initPhotoModal();
     initLocation();
     initAccounts();
+    initContactModal();
     initFooter();
 
     const galleryImages = numberedImagePaths('gallery', CONFIG.images.galleryCount);
