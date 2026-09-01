@@ -12,6 +12,11 @@
 
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+  const IMAGE_ASSET_VERSION = '20260901-1';
+
+  function imageAsset(path) {
+    return `${path}?v=${IMAGE_ASSET_VERSION}`;
+  }
 
   function initStableViewportHeight() {
     const root = document.documentElement;
@@ -61,7 +66,10 @@
   }
 
   function numberedImagePaths(folder, count) {
-    return Array.from({ length: count }, (_, index) => `images/${folder}/${index + 1}.jpg`);
+    return Array.from(
+      { length: count },
+      (_, index) => imageAsset(`images/${folder}/${index + 1}.jpg`)
+    );
   }
 
   /* ═══════════════════════════════════════════
@@ -146,7 +154,7 @@
     };
     setMeta('property', 'og:title', m.title);
     setMeta('property', 'og:description', m.description);
-    setMeta('property', 'og:image', 'images/og/1.jpg');
+    setMeta('property', 'og:image', new URL(imageAsset('images/og/1.jpg'), window.location.href).href);
     setMeta('name', 'description', m.description);
   }
 
@@ -182,7 +190,7 @@
      ═══════════════════════════════════════════ */
 
   function initHero() {
-    $('#heroPhoto').src = 'images/hero/1.jpg';
+    $('#heroPhoto').src = imageAsset('images/hero/1.jpg');
     $('#heroEnglishNames').textContent = `${CONFIG.groom.englishName || CONFIG.groom.name} · ${CONFIG.bride.englishName || CONFIG.bride.name}`;
     const heroNames = $('#heroNames');
     const heroHeart = document.createElement('span');
@@ -359,7 +367,7 @@
     const itemsPerRow = 3;
     const rowDelay = 180;
     const rowTransitionDuration = 1400;
-    const thumbnailImages = galleryImages.map((_, i) => `images/gallery-thumbs/${i + 1}.jpg`);
+    const thumbnailImages = galleryImages.map((_, i) => imageAsset(`images/gallery-thumbs/${i + 1}.jpg`));
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let collapseRevealTimer = null;
 
@@ -799,6 +807,7 @@
   function renderAccounts(accounts, containerId) {
     const container = $(`#${containerId}`);
     accounts.forEach((acc) => {
+      const copyNumber = String(acc.number || '').replace(/\D/g, '');
       const item = document.createElement('div');
       item.className = 'account-item';
       item.innerHTML = `
@@ -809,7 +818,7 @@
             ${acc.bank} ${acc.number}
           </div>
         </div>
-        <button class="account-item__copy" data-account="${acc.bank} ${acc.number} ${acc.name || ''}">
+        <button class="account-item__copy" data-account="${copyNumber}">
           복사
         </button>
       `;
