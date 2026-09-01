@@ -191,7 +191,6 @@
 
   function initHero() {
     $('#heroPhoto').src = imageAsset('images/hero/1.jpg');
-    $('#heroEnglishNames').textContent = `${CONFIG.groom.englishName || CONFIG.groom.name} · ${CONFIG.bride.englishName || CONFIG.bride.name}`;
     const heroNames = $('#heroNames');
     const heroHeart = document.createElement('span');
     heroHeart.className = 'hero__heart';
