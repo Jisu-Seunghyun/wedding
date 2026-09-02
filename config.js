@@ -18,7 +18,7 @@ const CONFIG = {
 
   // 이미지 파일 개수와 실제 폴더의 번호를 맞춰 주세요.
   images: {
-    galleryCount: 22
+    galleryCount: 21
   },
 
   // ── 메인 (히어로) ──
