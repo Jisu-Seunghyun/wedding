@@ -52,6 +52,7 @@
   --font-ko: 'Gowun Dodum';
   --stable-viewport-height: 100vh;
   --greeting-bridge-gap: clamp(84px, 22vw, 104px);
+  --hero-to-scripture-gap: clamp(126px, 33vw, 156px);
   --hero-content-bottom: clamp(20px, 4.7vw, 28px);
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -282,7 +283,7 @@ a { text-decoration: none; }
   min-height: 0;
   margin: 0 auto;
   padding-top: 0;
-  padding-bottom: calc(var(--greeting-bridge-gap) - var(--hero-content-bottom));
+  padding-bottom: calc(var(--hero-to-scripture-gap) - var(--hero-content-bottom));
   text-align: center;
 }
 
@@ -374,7 +375,7 @@ a { text-decoration: none; }
   min-height: var(--stable-viewport-height);
   margin: 0 auto;
   padding-top: 0;
-  padding-bottom: 72px;
+  padding-bottom: 58px;
   text-align: center;
 }
 
@@ -444,9 +445,9 @@ a { text-decoration: none; }
 .gallery { min-height: var(--stable-viewport-height); }
 
 .page__inner.gallery__inner {
-  padding-top: 62px;
+  padding-top: 50px;
   padding-right: 6px;
-  padding-bottom: 72px;
+  padding-bottom: 58px;
   padding-left: 6px;
 }
 
@@ -534,7 +535,7 @@ a { text-decoration: none; }
 
 /* Page 6 */
 .location__inner {
-  padding-top: 68px;
+  padding-top: 54px;
   padding-bottom: 64px;
 }
 
@@ -731,8 +732,8 @@ a { text-decoration: none; }
 
 /* Calendar and accounts retain their original interaction structure. */
 .utility-page__inner {
-  padding-top: 76px;
-  padding-bottom: 76px;
+  padding-top: 61px;
+  padding-bottom: 61px;
   text-align: center;
 }
 
