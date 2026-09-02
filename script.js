@@ -55,13 +55,13 @@
 
   function formatCoverDate(dateStr, timeStr) {
     const d = new Date(`${dateStr}T${timeStr}:00`);
-    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const date = String(d.getDate()).padStart(2, '0');
     const hours = String(d.getHours()).padStart(2, '0');
     const minutes = String(d.getMinutes()).padStart(2, '0');
-    const period = d.getHours() < 12 ? 'am' : 'pm';
+    const period = d.getHours() < 12 ? 'AM' : 'PM';
     return `${year}.${month}.${date}. ${days[d.getDay()]}. ${hours}:${minutes}${period}`;
   }
 
@@ -191,15 +191,6 @@
 
   function initHero() {
     $('#heroPhoto').src = imageAsset('images/hero/1.jpg');
-    const heroNames = $('#heroNames');
-    const heroHeart = document.createElement('span');
-    heroHeart.className = 'hero__heart';
-    heroHeart.textContent = '♥';
-    heroNames.replaceChildren(
-      document.createTextNode(`${CONFIG.groom.name} `),
-      heroHeart,
-      document.createTextNode(` ${CONFIG.bride.name}`)
-    );
     $('#heroDate').textContent = formatCoverDate(CONFIG.wedding.date, CONFIG.wedding.time);
     $('#heroVenue').textContent = CONFIG.wedding.venue;
   }

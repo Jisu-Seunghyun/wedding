@@ -7,6 +7,14 @@
 }
 
 @font-face {
+  font-family: 'Bethany';
+  src: url('fonts/bethany-regular.otf') format('opentype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Cormorant Garamond';
   src: url('fonts/cormorant-garamond-light.woff2') format('woff2');
   font-style: normal;
@@ -44,6 +52,7 @@
   --font-ko: 'Gowun Dodum';
   --stable-viewport-height: 100vh;
   --greeting-bridge-gap: clamp(84px, 22vw, 104px);
+  --hero-content-bottom: clamp(20px, 4.7vw, 28px);
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
@@ -176,12 +185,12 @@ a { text-decoration: none; }
 /* Fixed UI */
 .bgm-toggle {
   position: fixed;
-  top: calc(14px + var(--safe-top));
-  right: max(calc((100vw - 430px) / 2 + 14px), calc(14px + var(--safe-right)));
+  top: calc(6px + var(--safe-top));
+  right: max(calc((100vw - 430px) / 2 + 6px), calc(6px + var(--safe-right)));
   z-index: 8500;
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
@@ -273,7 +282,7 @@ a { text-decoration: none; }
   min-height: 0;
   margin: 0 auto;
   padding-top: 0;
-  padding-bottom: var(--greeting-bridge-gap);
+  padding-bottom: calc(var(--greeting-bridge-gap) - var(--hero-content-bottom));
   text-align: center;
 }
 
@@ -281,21 +290,21 @@ a { text-decoration: none; }
   position: absolute;
   z-index: 2;
   top: clamp(22px, 5.5vw, 28px);
-  right: 20px;
-  left: 20px;
-  color: var(--ink);
-  text-shadow: 0 1px 10px rgba(255, 255, 255, 0.72);
+  right: 4px;
+  left: 4px;
+  color: #fff;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
   pointer-events: none;
 }
 
 .hero__eyebrow {
-  font-family: var(--font-script), cursive;
-  font-size: clamp(48px, 15vw, 69.6px);
+  font-family: 'Bethany', var(--font-script), cursive;
+  font-size: clamp(58px, 18vw, 78px);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1;
   white-space: nowrap;
-  transform: translateX(-18px);
+  transform: none;
 }
 
 .hero__photo-frame {
@@ -317,35 +326,42 @@ a { text-decoration: none; }
   pointer-events: none;
 }
 
+.hero__photo-frame::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 30%;
+  background: linear-gradient(to bottom, transparent, rgba(24, 18, 20, 0.58));
+  pointer-events: none;
+}
+
 .hero__photo {
   width: 100%;
   height: auto;
 }
 
 .hero__content {
+  position: absolute;
+  z-index: 2;
+  right: 24px;
+  bottom: var(--hero-content-bottom);
+  left: 24px;
   display: grid;
-  gap: 5px;
-  margin-top: clamp(32px, 7vh, 50px);
-}
-
-.hero__names {
-  font-family: var(--font-ko), sans-serif;
-  font-size: 1.35rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-}
-
-.hero__heart {
-  display: inline-block;
-  font-size: 0.8em;
-  letter-spacing: 0;
+  gap: 1px;
+  margin: 0;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.72);
 }
 
 .hero__date,
 .hero__venue {
   font-size: 0.78rem;
   letter-spacing: 0.12em;
-  opacity: 0.8;
+  line-height: 1.35;
+  opacity: 0.94;
 }
 
 .countdown { display: none; }
