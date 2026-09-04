@@ -82,12 +82,12 @@ const CONFIG = {
 
   accounts: {
     groom: [
-      { role: "부모님", name: "황성재 김미정", bank: "카카오뱅크", number: "3333-33-0735577" },
+      { role: "부모님", name: "황성재 김미정", bank: "기업은행", number: "010-9059-1495" },
       { role: "신랑", name: "황승현", bank: "국민은행", number: "037401-04-068119" }
     ],
     bride: [
       { role: "부모님", name: "이철원 이은정", bank: "카카오뱅크", number: "3333-28-9724660" },
-      { role: "신부", name: "이지수", bank: "신한은행", number: "110-289-264490" }
+      { role: "신부", name: "이지수", bank: "신한은행", number: "110-409-864968" }
     ]
   },
 

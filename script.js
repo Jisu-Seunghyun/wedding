@@ -12,7 +12,7 @@
 
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
-  const IMAGE_ASSET_VERSION = '20260902-1';
+  const IMAGE_ASSET_VERSION = '20260904-1';
 
   function imageAsset(path) {
     return `${path}?v=${IMAGE_ASSET_VERSION}`;
