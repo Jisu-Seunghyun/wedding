@@ -290,7 +290,7 @@ a { text-decoration: none; }
 .hero__heading {
   position: absolute;
   z-index: 2;
-  top: clamp(22px, 5.5vw, 28px);
+  top: clamp(28px, 7vw, 34px);
   right: 4px;
   left: 4px;
   color: #fff;
@@ -311,7 +311,7 @@ a { text-decoration: none; }
 .hero__photo-frame {
   position: relative;
   width: auto;
-  aspect-ratio: 1333 / 2000;
+  aspect-ratio: 961 / 1637;
   margin-right: calc(-1 * max(28px, var(--safe-right)));
   margin-left: calc(-1 * max(28px, var(--safe-left)));
   overflow: hidden;
