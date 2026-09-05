@@ -370,11 +370,13 @@ a { text-decoration: none; }
 .countdown { display: none; }
 
 /* Page 2 */
+.page.greeting { min-height: auto; }
+
 .greeting__inner {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  min-height: var(--stable-viewport-height);
+  min-height: auto;
   margin: 0 auto;
   padding-top: 0;
   padding-bottom: 58px;
@@ -444,9 +446,10 @@ a { text-decoration: none; }
 }
 
 /* Gallery */
-.gallery { min-height: var(--stable-viewport-height); }
+.gallery { min-height: auto; }
 
 .page__inner.gallery__inner {
+  margin: 0 auto;
   padding-top: 50px;
   padding-right: 6px;
   padding-bottom: 58px;
@@ -537,6 +540,7 @@ a { text-decoration: none; }
 
 /* Page 6 */
 .location__inner {
+  margin: 0 auto;
   padding-top: 54px;
   padding-bottom: 64px;
 }
@@ -743,9 +747,13 @@ a { text-decoration: none; }
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: 0 auto;
   padding-right: max(14px, var(--safe-right));
   padding-left: max(14px, var(--safe-left));
 }
+
+.page.calendar-section,
+.page.location { min-height: auto; }
 
 .calendar-section .section__title { margin-bottom: 42px; }
 .account .section__title { margin-bottom: 34px; }
@@ -1220,8 +1228,7 @@ a { text-decoration: none; }
 @media (min-width: 700px) {
   .page { min-height: 760px; }
 
-  .hero__inner,
-  .greeting__inner { min-height: 760px; }
+  .hero__inner { min-height: 760px; }
 
   .contact-modal { align-items: center; }
 
