@@ -74,13 +74,13 @@
 
   function initImageProtection() {
     document.addEventListener('contextmenu', (event) => {
-      if (event.target instanceof Element && event.target.closest('img')) {
+      if (event.target instanceof Element && event.target.closest('img, .photo-modal__save-guard')) {
         event.preventDefault();
       }
     }, true);
 
     document.addEventListener('dragstart', (event) => {
-      if (event.target instanceof Element && event.target.closest('img')) {
+      if (event.target instanceof Element && event.target.closest('img, .photo-modal__save-guard')) {
         event.preventDefault();
       }
     }, true);
@@ -516,7 +516,12 @@
       img.addEventListener('load', revealImage, { once: true });
       if (img.complete && img.naturalWidth > 0) revealImage();
 
+      const saveGuard = document.createElement('div');
+      saveGuard.className = 'photo-modal__save-guard';
+      saveGuard.setAttribute('aria-hidden', 'true');
+
       media.appendChild(img);
+      media.appendChild(saveGuard);
       slide.appendChild(media);
       track.appendChild(slide);
     });
