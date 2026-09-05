@@ -72,6 +72,20 @@
     );
   }
 
+  function initImageProtection() {
+    document.addEventListener('contextmenu', (event) => {
+      if (event.target instanceof Element && event.target.closest('img')) {
+        event.preventDefault();
+      }
+    }, true);
+
+    document.addEventListener('dragstart', (event) => {
+      if (event.target instanceof Element && event.target.closest('img')) {
+        event.preventDefault();
+      }
+    }, true);
+  }
+
   /* ═══════════════════════════════════════════
      Toast
      ═══════════════════════════════════════════ */
@@ -1032,6 +1046,7 @@
 
   function init() {
     initStableViewportHeight();
+    initImageProtection();
     setMetaTags();
     initBgm();
     initCurtain();
